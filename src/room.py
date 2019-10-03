@@ -10,8 +10,3 @@ class Room():
         return f"Room: {self.name} is {self.description}"
     def __repr__(self):
         return f"Player({repr(self.name)}, {repr(self.description)})"
-
-
-outs = Room("outside", "this is out of the house")
-
-print(repr(outs))
