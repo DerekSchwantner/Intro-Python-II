@@ -1,4 +1,6 @@
 from room import Room
+from player import Player
+from item import Item
 
 # Declare all the rooms
 
@@ -21,6 +23,21 @@ chamber! Sadly, it has already been completely emptied by
 earlier adventurers. The only exit is to the south."""),
 }
 
+# Declare Items
+item = {
+    'sword':  Item("sword",
+                     "The ancient sword of Excalibur"),
+
+    'gun':  Item("Gun",
+                         "357 Magnum, 6 Shots"),
+    'club':  Item("Club",
+                         "Louisville Slugger, 36 inches long"),
+}
+
+sword = item["sword"].name
+gun = item["gun"].name
+club = item["club"].name
+
 
 # Link rooms together
 
@@ -33,6 +50,16 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
+outside = room['outside']
+foyer = room['foyer']
+overlook = room['overlook']
+narrow = room['narrow']
+treasure = room['treasure']
+
+
+outside.add_item(gun)
+foyer.add_item('gun')
+overlook.add_item('club')
 #
 # Main
 #
@@ -49,3 +76,34 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+bob = Player("Bob", room['outside'])
+current_room = bob.current_room
+current_desc = bob.current_room.description
+room_items = current_room.items
+directions = ["n", "s", "e", "w"]
+value = False
+
+
+print(f"You are currently in {current_room}. This is where {current_desc}. Located here is: {room_items}")
+print(room_items)
+while value is not True:
+        command = input("Enter a command (n, s, e, w, or q to quit the game)")
+        if command == "q":
+            print(f"Goodbye {bob.name}")
+            value = False
+        if command not in directions:
+            print("you must choose a valid command!!")
+            command = input("Enter a command (n, s, e, w, or q to quit the game)")
+        if command in directions:
+            move = f"{command}_to"
+            if hasattr(current_room, move):
+                current_room = getattr(current_room, move)
+                room_name = current_room.name
+                outside.remove_item(gun)
+                print("sword is dead", room_items)
+                print("now the room is:", current_room)
+            else:
+                print(f"There is no room in that direction")
+                command = input("Enter a command (n, s, e, w, or q to quit the game)")
+
